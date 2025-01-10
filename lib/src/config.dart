@@ -4,6 +4,19 @@ part of '../keycloak_wrapper.dart';
 ///
 /// Holds essential details required for integrating with a Keycloak server.
 class KeycloakConfig {
+  KeycloakConfig({
+    required this.bundleIdentifier,
+    required this.clientId,
+    required this.frontendUrl,
+    required this.realm,
+    this.additionalScopes,
+    this.clientSecret,
+  }) : assert(
+          RegExp(r'^(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?)*\.?$')
+              .hasMatch(bundleIdentifier),
+          'Invalid bundle identifier. Must not contain characters that are not allowed inside a hostname, such as spaces, underscores, etc.',
+        );
+
   /// The application unique identifier.
   final String bundleIdentifier;
 
@@ -22,19 +35,6 @@ class KeycloakConfig {
   /// The client's password to prove its identity to the Keycloak server.
   final String? clientSecret;
 
-  KeycloakConfig({
-    required this.bundleIdentifier,
-    required this.clientId,
-    required this.frontendUrl,
-    required this.realm,
-    this.additionalScopes,
-    this.clientSecret,
-  }) : assert(
-          RegExp(r'^(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?)*\.?$')
-              .hasMatch(bundleIdentifier),
-          'Invalid bundle identifier. Must not contain characters that are not allowed inside a hostname, such as spaces, underscores, etc.',
-        );
-
   /// Whether non-HTTPS endpoints are allowed or not.
   bool get allowInsecureConnections => !frontendUrl.startsWith('https://');
 
@@ -45,7 +45,7 @@ class KeycloakConfig {
   String get redirectUri => '$bundleIdentifier://login-callback';
 
   /// The identifier for resources that the client wants to access.
-  List<String> get scopes => List.from(<String>{
+  List<String> get scopes => List<String>.from(<String>{
         'openid',
         ...?additionalScopes,
       });
