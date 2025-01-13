@@ -1,6 +1,6 @@
 part of '../keycloak_wrapper.dart';
 
-/// A wrapper around the Keycloak authentication service.
+/// A wrapper around the Keycloak authentication service. Pached version without token
 ///
 /// Provides functionalities for user authentication, token management, and resource authorization.
 class KeycloakWrapper {
