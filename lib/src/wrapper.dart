@@ -107,6 +107,7 @@ class KeycloakWrapper {
       _streamController.add(_tokenResponse.isValid);
       return _tokenResponse.isValid;
     } catch (e, s) {
+      _streamController.add(false);
       onError('Failed to login.', e, s);
       return false;
     }
