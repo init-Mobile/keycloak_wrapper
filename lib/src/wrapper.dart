@@ -86,7 +86,7 @@ class KeycloakWrapper {
   /// Logs the user in.
   ///
   /// Returns true if login is successful.
-  Future<bool> login() async {
+  Future<bool> login({bool preferEphemeralSession = false}) async {
     _assertInitialization();
     try {
       _tokenResponse = await _appAuth.authorizeAndExchangeCode(
@@ -97,6 +97,9 @@ class KeycloakWrapper {
           scopes: _keycloakConfig.scopes,
           allowInsecureConnections: _keycloakConfig.allowInsecureConnections,
           clientSecret: _keycloakConfig.clientSecret,
+          externalUserAgent: preferEphemeralSession
+              ? ExternalUserAgent.ephemeralAsWebAuthenticationSession
+              : ExternalUserAgent.asWebAuthenticationSession,
         ),
       );
 
@@ -116,7 +119,7 @@ class KeycloakWrapper {
   /// Logs the user out.
   ///
   /// Returns true if logout is successful.
-  Future<bool> logout() async {
+  Future<bool> logout({bool preferEphemeralSession = false}) async {
     _assertInitialization();
     try {
       final EndSessionRequest request = EndSessionRequest(
@@ -124,6 +127,9 @@ class KeycloakWrapper {
         issuer: _keycloakConfig.issuer,
         postLogoutRedirectUrl: _keycloakConfig.redirectUri,
         allowInsecureConnections: _keycloakConfig.allowInsecureConnections,
+        externalUserAgent: preferEphemeralSession
+            ? ExternalUserAgent.ephemeralAsWebAuthenticationSession
+            : ExternalUserAgent.asWebAuthenticationSession,
       );
 
       await _appAuth.endSession(request);
